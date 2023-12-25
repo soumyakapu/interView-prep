@@ -12,6 +12,7 @@ function App() {
       <NavBar/>
     {/* <BrowserRouter> */}
     <Routes>
+      
       {/* <Route path="/core" element={<CoreJava/>}/> */}
       </Routes>
     {/* </BrowserRouter> */}
