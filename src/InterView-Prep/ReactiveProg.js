@@ -1,25 +1,17 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { ADD_URL } from "../utils/Api";
+import { ADD_URL, GET_ALL_URLS } from "../utils/Api";
 
 export const ReactiveProg = ()=>{
-  const navigate = useNavigate
+ 
     const [topicDetails,setTopicDetails] = useState({
-        topic :'',
+        topicName :'',
         topicUrl :''
     })
     const [tableData, setTableData] = useState([]);
-    const [url, setUrl] = useState("");
-    // const changeHandler = (e)=>{
-    //     const{name, value} = e.target;
-    //     setTopicDetails((prevDetails)=>({
-    //         ...prevDetails,
-    //         [name]:value
-    //     }));
-    // }
+
     
   const handleChange = (e) => {
-    setUrl(e.target.value);
     const{name, value} = e.target;
     setTopicDetails((prevDetails)=>({
         ...prevDetails,
@@ -31,7 +23,7 @@ export const ReactiveProg = ()=>{
         e.preventDefault();
         setTableData((prevData) => [...prevData, topicDetails]);
         setTopicDetails({
-          topic: "",
+          topicName: "",
           topicUrl: "",
         });
         
@@ -39,20 +31,34 @@ export const ReactiveProg = ()=>{
     const post = async()=>{
      const response = await fetch(ADD_URL,{
         method :'POST',
+        mode:'cors',
         headers:{
           "Content-Type":"application/json"
         },
         body :JSON.stringify(topicDetails)
       })
       await response.json()
-         navigate('/reactive')
     }
+   
+    useEffect(()=>{  
+      console.log("data")   
+      getAll()
+      
+     
+  },[])
+  const getAll = async()=>{
+    console.log("getall")
+    const response = await fetch(GET_ALL_URLS)
+    const jsonData = await response.json()
+    console.log(jsonData)
+    setTableData(jsonData)
+  }
     return(
         <div>
             <h1>Wlecome to Reactive Programming</h1>
             <form onSubmit={submitHandler}>
                 <input type="text" placeholder="topicName"
-                name="topic" value={topicDetails.topic} onChange={handleChange}
+                name="topicName" value={topicDetails.topicName} onChange={handleChange}
                 />
                 <input type="text" placeholder="topicUrl"
                 name="topicUrl"value={topicDetails.topicUrl} onChange={handleChange}
@@ -71,12 +77,12 @@ export const ReactiveProg = ()=>{
                 <tbody>
                 {tableData.map((item, index) => (
             <tr key={index}>
-              <td>{item.topic}</td>
+              <td>{item.topicName}</td>
               <td>
-              {url && (
+              {item.topicUrl && (
                     <p>
-                      <a href={url} target="_blank" rel="noopener noreferrer">
-                        {url}
+                      <a href={item.topicUrl} target="_blank" rel="noopener noreferrer">
+                        {item.topicUrl}
                       </a>
                     </p>
                   )}
@@ -85,7 +91,6 @@ export const ReactiveProg = ()=>{
           ))}
                 </tbody>
             </table>
-            <Link to ="https://medium.com/sysco-labs/reactive-programming-in-java-8d1f5c648012">Fundamentals of Reactive Programming</Link>
         </div>
     )
 }
