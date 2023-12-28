@@ -40,17 +40,14 @@ export const ReactiveProg = ()=>{
       await response.json()
     }
    
-    useEffect(()=>{  
-      console.log("data")   
+    useEffect(()=>{     
       getAll()
       
      
   },[])
   const getAll = async()=>{
-    console.log("getall")
     const response = await fetch(GET_ALL_URLS)
     const jsonData = await response.json()
-    console.log(jsonData)
     setTableData(jsonData)
   }
     return(
